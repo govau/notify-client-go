@@ -7,12 +7,6 @@ This documentation is for developers interested in using a Go client to integrat
 - [Installation](#installation)
 - [Getting started](#getting-started)
 - [Send messages](#send-messages)
-- [Get the status of one message](#get-the-status-of-one-message)
-- [Get the status of all messages](#get-the-status-of-all-messages)
-- [Get a template by ID](#get-a-template-by-id)
-- [Get a template by ID and version](#get-a-template-by-id-and-version)
-- [Get all templates](#get-all-templates)
-- [Generate a preview template](#generate-a-preview-template)
 - [Tests](#tests)
 
 ## Installation
@@ -221,16 +215,8 @@ p := notify.Personalisation{
 
 ## Tests
 
-There are unit and integration tests that can be run to test functionality of the client. You will need to have the relevant environment variables sourced to run the tests.
-
 To run the unit tests:
 
 ```sh
-npm test
-```
-
-To run the integration tests:
-
-```sh
-npm test --integration
+go test ./...
 ```
