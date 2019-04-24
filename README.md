@@ -18,7 +18,7 @@ go get -u github.com/govau/notify-client-go
 ## Getting started
 
 ```Go
-client, err := notify.NewClient(api_key)
+client, err := notify.NewClient(apiKey)
 ```
 
 Generate an API key by logging in to [Notify.gov.au](https://notify.gov.au) and going to the _API integration_ page.
@@ -36,7 +36,7 @@ Click here to expand for more information.
 
 ```go
 resp, err := client.SendSMS(
-  templateId,
+  templateID,
   phoneNumber,
   notify.Reference("Sam's reminders"),
   notify.Personalisation{
@@ -86,7 +86,7 @@ Click here to expand for more information.
 
 The phone number of the recipient, only required for sms notifications.
 
-##### `templateId`
+##### `templateID`
 
 Find by clicking **API info** for the template you want to send.
 
@@ -182,7 +182,7 @@ Click here to expand for more information.
 
 The email address of the recipient, only required for email notifications.
 
-##### `templateId`
+##### `templateID`
 
 Find by clicking **API info** for the template you want to send.
 
