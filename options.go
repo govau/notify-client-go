@@ -2,17 +2,17 @@ package notify
 
 import "encoding/json"
 
-type PayloadItem struct {
+type payloadItem struct {
 	field   string
 	message interface{}
 }
 
-type Payload []PayloadItem
+type payload []payloadItem
 
-func (payload Payload) MarshalJSON() ([]byte, error) {
+func (p payload) MarshalJSON() ([]byte, error) {
 	dict := map[string]interface{}{}
 
-	for _, item := range payload {
+	for _, item := range p {
 		dict[item.field] = item.message
 	}
 
@@ -24,81 +24,81 @@ func (payload Payload) MarshalJSON() ([]byte, error) {
 // The struct should be structured such that they key is the name of the value in your template, and the value is what you expect to be substituted in the message.
 type Personalisation []struct{ Key, Value string }
 
-func (personalisation Personalisation) UpdatePayload(payload Payload) Payload {
+func (personalisation Personalisation) updatePayload(p payload) payload {
 	dict := map[string]string{}
 
 	for _, item := range personalisation {
 		dict[item.Key] = item.Value
 	}
 
-	return append(payload, PayloadItem{"personalisation", dict})
+	return append(p, payloadItem{"personalisation", dict})
 }
 
-func (personalisation Personalisation) UpdateSMSPayload(p Payload) Payload {
-	return personalisation.UpdatePayload(p)
+func (personalisation Personalisation) updateSMSPayload(p payload) payload {
+	return personalisation.updatePayload(p)
 }
 
-func (personalisation Personalisation) UpdateEmailPayload(p Payload) Payload {
-	return personalisation.UpdatePayload(p)
+func (personalisation Personalisation) updateEmailPayload(p payload) payload {
+	return personalisation.updatePayload(p)
 }
 
 // Reference is a unique identifier you create. It identifies a single unique notification or a batch of notifications.
 func Reference(referenceID string) CommonOption {
 	return CommonOption{
-		UpdatePayloadFunc(func(payload Payload) Payload {
-			return append(payload, PayloadItem{"reference", referenceID})
+		updatePayloadFunc(func(p payload) payload {
+			return append(p, payloadItem{"reference", referenceID})
 		}),
 	}
 }
 
 // EmailReplyToID is the id of the reply-to address to receive replies from users.
 func EmailReplyToID(address string) SendEmailOption {
-	return UpdatePayloadFunc(func(payload Payload) Payload {
-		return append(payload, PayloadItem{"email_reply_to_id", address})
+	return updatePayloadFunc(func(p payload) payload {
+		return append(p, payloadItem{"email_reply_to_id", address})
 	})
 }
 
 // SMSSenderID is a unique identifier for the sender of a text message.
 func SMSSenderID(senderID string) SendSMSOption {
-	return UpdatePayloadFunc(func(payload Payload) Payload {
-		return append(payload, PayloadItem{"sms_sender_id", senderID})
+	return updatePayloadFunc(func(p payload) payload {
+		return append(p, payloadItem{"sms_sender_id", senderID})
 	})
 }
 
-type PayloadUpdater interface {
-	UpdatePayload(Payload) Payload
+type payloadUpdater interface {
+	updatePayload(payload) payload
 }
 
 type CommonOption struct {
-	PayloadUpdater
+	payloadUpdater
 }
 
 type SendSMSOption interface {
-	UpdateSMSPayload(Payload) Payload
+	updateSMSPayload(payload) payload
 }
 
 type SendEmailOption interface {
-	UpdateEmailPayload(Payload) Payload
+	updateEmailPayload(payload) payload
 }
 
-func (co CommonOption) UpdateSMSPayload(p Payload) Payload {
-	return co.UpdatePayload(p)
+func (co CommonOption) updateSMSPayload(p payload) payload {
+	return co.updatePayload(p)
 }
 
-func (co CommonOption) UpdateEmailPayload(p Payload) Payload {
-	return co.UpdatePayload(p)
+func (co CommonOption) updateEmailPayload(p payload) payload {
+	return co.updatePayload(p)
 }
 
-type UpdatePayloadFunc func(Payload) Payload
+type updatePayloadFunc func(payload) payload
 
-func (fn UpdatePayloadFunc) UpdatePayload(p Payload) Payload {
+func (fn updatePayloadFunc) updatePayload(p payload) payload {
 	return fn(p)
 }
 
-func (fn UpdatePayloadFunc) UpdateSMSPayload(p Payload) Payload {
+func (fn updatePayloadFunc) updateSMSPayload(p payload) payload {
 	return fn(p)
 }
 
-func (fn UpdatePayloadFunc) UpdateEmailPayload(p Payload) Payload {
+func (fn updatePayloadFunc) updateEmailPayload(p payload) payload {
 	return fn(p)
 }

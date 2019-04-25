@@ -64,16 +64,16 @@ func (c Client) SendEmail(
 ) (SentEmail, error) {
 	var response SentEmail
 	var buf bytes.Buffer
-	var payload = Payload{
+	var p = payload{
 		{"template_id", templateID},
 		{"email_address", emailAddress},
 	}
 
 	for _, option := range options {
-		payload = option.UpdateEmailPayload(payload)
+		p = option.updateEmailPayload(p)
 	}
 
-	err := json.NewEncoder(&buf).Encode(payload)
+	err := json.NewEncoder(&buf).Encode(p)
 	if err != nil {
 		return response, err
 	}
@@ -89,16 +89,16 @@ func (c Client) SendSMS(
 ) (SentSMS, error) {
 	var response SentSMS
 	var buf bytes.Buffer
-	var payload = Payload{
+	var p = payload{
 		{"template_id", templateID},
 		{"phone_number", phoneNumber},
 	}
 
 	for _, option := range options {
-		payload = option.UpdateSMSPayload(payload)
+		p = option.updateSMSPayload(p)
 	}
 
-	err := json.NewEncoder(&buf).Encode(payload)
+	err := json.NewEncoder(&buf).Encode(p)
 	if err != nil {
 		return response, err
 	}
