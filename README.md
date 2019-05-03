@@ -213,6 +213,50 @@ p := notify.Personalisation{
 
 </details>
 
+## Get all templates
+
+#### Method
+
+Returns the latest version of each template
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
+```go
+templates, err := client.Templates()
+```
+
+</details>
+
+#### Response
+
+If the request is successful, `response` will be a `slice` of templates.
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
+```go
+[{
+    ID:        "template ID",
+    Name:      "template name",
+    Type:      "email",
+    CreatedAt: "2019-04-10T00:46:29.076570Z",
+    UpdatedAt: "2019-04-10T00:46:29.076570Z",
+    CreatedBy: "someone@email.com",
+    Version:   1,
+    Subject:   "Subject of an email or letter notification, or nil if an sms message",
+    Body:      "Body of the notification",
+}, {
+    ...template
+}]
+```
+
+</details>
+
 ## Tests
 
 To run the unit tests:
