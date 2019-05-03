@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/url"
 
-	"github.com/govau/notify-client-go/base"
+	"github.com/govau/notify-client-go/internal/base"
 )
 
 type Client struct {
