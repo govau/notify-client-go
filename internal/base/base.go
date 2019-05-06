@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	jose "gopkg.in/square/go-jose.v2"
@@ -14,6 +16,24 @@ import (
 )
 
 const NotifyBaseURL = "https://rest-api.notify.gov.au"
+
+type Error struct {
+	Error   string `json:"error"`
+	Message string `json:"message"`
+}
+
+type APIError struct {
+	Errors     []Error `json:"errors"`
+	StatusCode int64   `json:"status_code"`
+}
+
+func (err APIError) Error() string {
+	var allErrors []string
+	for _, v := range err.Errors {
+		allErrors = append(allErrors, v.Message)
+	}
+	return strings.Join(allErrors, ", ")
+}
 
 type Response struct {
 	response *http.Response
@@ -107,6 +127,23 @@ func (c Client) makeRequest(request *http.Request, options ...requestOption) Res
 	response, err := c.Do(request)
 	if err != nil {
 		return BadResponse(err)
+	}
+
+	if response.StatusCode >= 400 {
+		var body []byte
+
+		body, err = ioutil.ReadAll(response.Body)
+		if err != nil {
+			return BadResponse(err)
+		}
+
+		var apiErr APIError
+		err = json.Unmarshal(body, &apiErr)
+		if err != nil {
+			return BadResponse(err)
+		}
+
+		return BadResponse(apiErr)
 	}
 
 	var buf bytes.Buffer

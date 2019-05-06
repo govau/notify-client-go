@@ -107,6 +107,17 @@ func (c Client) SendSMS(
 	return response, err
 }
 
+// APIErrorFromError returns detailed information about an error
+// if the error was a response from the Notify service (ie not an
+// internal API client error).
+func APIErrorFromError(e error) (*base.APIError, bool) {
+	aE, ok := e.(base.APIError)
+	if ok {
+		return &aE, true
+	}
+	return nil, false
+}
+
 type Template struct {
 	ID        string `json:"id,omitempty"`
 	Name      string `json:"name"`
