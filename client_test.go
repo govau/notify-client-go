@@ -9,10 +9,53 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/govau/notify-client-go"
+	notify "github.com/govau/notify-client-go"
 )
 
-func TestNewClient(t *testing.T) {
+func TestNewClientAPIKey(t *testing.T) {
+	type args struct {
+	}
+	tests := []struct {
+		name    string
+		apiKey  string
+		wantErr bool
+	}{
+		{
+			name:    "API key not provided",
+			apiKey:  "",
+			wantErr: true,
+		},
+		{
+			name:    "API key too short",
+			apiKey:  "1-2-3-4",
+			wantErr: true,
+		},
+		{
+			name:    "API key too short",
+			apiKey:  "20bd0d9a-feda-4c75-97bd-a206ecb4019b",
+			wantErr: true,
+		},
+		{
+			name:    "API key without name prefix",
+			apiKey:  "1af19ba3-1f4b-4014-af6f-bb917e0e14b3-20bd0d9a-feda-4c75-97bd-a206ecb4019b",
+			wantErr: false,
+		},
+		{
+			name:    "API key with name prefix",
+			apiKey:  "key_name-1af19ba3-1f4b-4014-af6f-bb917e0e14b3-20bd0d9a-feda-4c75-97bd-a206ecb4019b",
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if _, err := notify.NewClient(tt.apiKey); (err != nil) != tt.wantErr {
+				t.Errorf("NewClient(%s) error = %v, wantErr %v", tt.apiKey, err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestNewClientAndSend(t *testing.T) {
 	c := make(chan string, 1)
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

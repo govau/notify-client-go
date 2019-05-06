@@ -3,6 +3,8 @@ package notify
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/url"
 
 	"github.com/govau/notify-client-go/internal/base"
@@ -22,7 +24,23 @@ func WithBaseURL(target string) ClientOption {
 	}
 }
 
+func validateAPIKey(apiKey string) error {
+	if apiKey == "" {
+		return errors.New("api key is empty")
+	}
+	// 73 is the min length accounting for an API key where the name prefix has
+	// not been provided.
+	if len(apiKey) < 73 {
+		return errors.New("api key is too short")
+	}
+	return nil
+}
+
 func NewClient(apiKey string, options ...ClientOption) (*Client, error) {
+	if err := validateAPIKey(apiKey); err != nil {
+		return nil, fmt.Errorf("notify: %v", err)
+	}
+
 	var err error
 
 	slice := func(start, end int) string {
