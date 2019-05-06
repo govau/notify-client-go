@@ -11,7 +11,7 @@ import (
 )
 
 type Client struct {
-	base.Client
+	c base.Client
 }
 
 type ClientOption func(base.Client) (base.Client, error)
@@ -71,7 +71,7 @@ func NewClient(apiKey string, options ...ClientOption) (*Client, error) {
 
 func (c Client) Templates() (Templates, error) {
 	var templates Templates
-	err := c.Get("./v2/templates").JSON(&templates, "templates").Error
+	err := c.c.Get("./v2/templates").JSON(&templates, "templates").Error
 	return templates, err
 }
 
@@ -96,7 +96,7 @@ func (c Client) SendEmail(
 		return response, err
 	}
 
-	err = c.Post("./v2/notifications/email", &buf).JSON(&response).Error
+	err = c.c.Post("./v2/notifications/email", &buf).JSON(&response).Error
 	return response, err
 }
 
@@ -121,7 +121,7 @@ func (c Client) SendSMS(
 		return response, err
 	}
 
-	err = c.Post("./v2/notifications/sms", &buf).JSON(&response).Error
+	err = c.c.Post("./v2/notifications/sms", &buf).JSON(&response).Error
 	return response, err
 }
 
