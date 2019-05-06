@@ -7,7 +7,6 @@ This documentation is for developers interested in using a Go client to integrat
 - [Installation](#installation)
 - [Getting started](#getting-started)
 - [Send messages](#send-messages)
-- [Errors](#errors)
 - [Tests](#tests)
 
 ## Installation
@@ -257,60 +256,6 @@ Click here to expand for more information.
 ```
 
 </details>
-
-## Errors
-
-#### Basic error
-
-```go
-resp, err := client.SendSMS(...)
-// err = "Template not found"
-```
-
-#### Detailed API error
-
-The `APIErrorFromError` method is provided to retrieve more granular error information when a request to the Notify service returns an error response.
-
-```go
-
-type APIError struct {
-    Errors []struct {
-        Error   string
-        Message string
-    }
-    StatusCode int64
-}
-```
-
-```go
-resp, err := client.SendSMS(...)
-if err != nil {
-    apiErr, ok := notify.APIErrorFromError(err)
-    if ok {
-        log.Println(apiErr.Errors)
-        log.Println(apiErr.StatusCode)
-    } else {
-        log.Println(err)
-    }
-}
-
-```
-
-Outputs:
-
-```shell
-[{
-    Error: "BadRequestError"
-    Message: "Template not found"
-}]
-400
-```
-
-or
-
-```shell
-Some non-request error
-```
 
 ## Tests
 

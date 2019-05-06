@@ -57,8 +57,7 @@ func (resp Response) JSON(v interface{}, at ...string) Response {
 		data = nested[field]
 	}
 
-	err := json.Unmarshal(data, v)
-	if err != nil {
+	if err := json.Unmarshal(data, v); err != nil {
 		return BadResponse(err)
 	}
 
@@ -138,8 +137,7 @@ func (c Client) makeRequest(request *http.Request, options ...requestOption) Res
 		}
 
 		var apiErr APIError
-		err = json.Unmarshal(body, &apiErr)
-		if err != nil {
+		if err := json.Unmarshal(body, &apiErr); err != nil {
 			return BadResponse(err)
 		}
 
@@ -148,13 +146,11 @@ func (c Client) makeRequest(request *http.Request, options ...requestOption) Res
 
 	var buf bytes.Buffer
 
-	_, err = io.Copy(&buf, response.Body)
-	if err != nil {
+	if _, err := io.Copy(&buf, response.Body); err != nil {
 		return BadResponse(err)
 	}
 
-	err = response.Body.Close()
-	if err != nil {
+	if err := response.Body.Close(); err != nil {
 		return BadResponse(err)
 	}
 
