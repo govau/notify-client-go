@@ -8,32 +8,15 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
 	"time"
+
+	"github.com/govau/notify-client-go/notifyapi"
 
 	jose "gopkg.in/square/go-jose.v2"
 	"gopkg.in/square/go-jose.v2/jwt"
 )
 
 const NotifyBaseURL = "https://rest-api.notify.gov.au"
-
-type Error struct {
-	Error   string `json:"error"`
-	Message string `json:"message"`
-}
-
-type APIError struct {
-	Errors     []Error `json:"errors"`
-	StatusCode int64   `json:"status_code"`
-}
-
-func (err APIError) Error() string {
-	var allErrors []string
-	for _, v := range err.Errors {
-		allErrors = append(allErrors, v.Message)
-	}
-	return strings.Join(allErrors, ", ")
-}
 
 type Response struct {
 	response *http.Response
@@ -106,7 +89,7 @@ func (c Client) Do(req *http.Request) (*http.Response, error) {
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token))
 	req.Header.Add("X-Custom-Forwarder", "")
-	req.Header.Add("User-agent", "NOTIFY-API-GO-CLIENT/0.1.0")
+	req.Header.Add("User-agent", "NOTIFY-API-GO-CLIENT/0.0.1")
 
 	req.URL.Host = ""
 	req.URL.Scheme = ""
@@ -136,10 +119,11 @@ func (c Client) makeRequest(request *http.Request, options ...requestOption) Res
 			return BadResponse(err)
 		}
 
-		var apiErr APIError
-		if err := json.Unmarshal(body, &apiErr); err != nil {
+		apiErr := &notifyapi.Error{}
+		if err := json.Unmarshal(body, apiErr); err != nil {
 			return BadResponse(err)
 		}
+		apiErr.Header = response.Header
 
 		return BadResponse(apiErr)
 	}
