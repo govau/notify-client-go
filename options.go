@@ -19,9 +19,11 @@ func (p payload) MarshalJSON() ([]byte, error) {
 	return json.Marshal(dict)
 }
 
-// Personalisation is a slice of structs used to define placeholder values in a template,
-// such as name or reference number.
-// The struct should be structured such that they key is the name of the value in your template, and the value is what you expect to be substituted in the message.
+// Personalisation is a slice of structs used to define placeholder values in a
+// template, such as name or reference number.
+// The struct should be structured such that they key is the name of the value
+// in your template, and the value is what you expect to be substituted in the
+// message.
 type Personalisation []struct{ Key, Value string }
 
 func (personalisation Personalisation) updatePayload(p payload) payload {
@@ -42,7 +44,8 @@ func (personalisation Personalisation) updateEmailPayload(p payload) payload {
 	return personalisation.updatePayload(p)
 }
 
-// Reference is a unique identifier you create. It identifies a single unique notification or a batch of notifications.
+// Reference is a unique identifier you create. It identifies a single unique
+// notification or a batch of notifications.
 func Reference(referenceID string) CommonOption {
 	return CommonOption{
 		updatePayloadFunc(func(p payload) payload {
@@ -51,7 +54,8 @@ func Reference(referenceID string) CommonOption {
 	}
 }
 
-// EmailReplyToID is the id of the reply-to address to receive replies from users.
+// EmailReplyToID is the ID of the reply-to address to receive replies from
+// users.
 func EmailReplyToID(address string) SendEmailOption {
 	return updatePayloadFunc(func(p payload) payload {
 		return append(p, payloadItem{"email_reply_to_id", address})
