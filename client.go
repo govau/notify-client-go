@@ -70,23 +70,23 @@ func NewClient(apiKey string, options ...ClientOption) (*Client, error) {
 	return &Client{client}, nil
 }
 
-func (c Client) TemplateByID(templateID string) (Template, error) {
+func (c Client) TemplateByID(id string) (Template, error) {
 	var template Template
-	err := c.c.Get("./v2/template/" + templateID).JSON(&template).Error
+	err := c.c.Get("./v2/template/" + id).JSON(&template).Error
 	return template, err
 }
 
-func (c Client) TemplateVersion(templateID string, version int) (Template, error) {
-	url := "/v2/template/" + templateID + "/version/" + strconv.Itoa(version)
+func (c Client) TemplateVersion(id string, version int) (Template, error) {
+	url := "/v2/template/" + id + "/version/" + strconv.Itoa(version)
 	var template Template
 	err := c.c.Get(url).JSON(&template).Error
 	return template, err
 }
 
-func (c Client) Templates(templateType string) (Templates, error) {
+func (c Client) Templates(typ string) (Templates, error) {
 	url := "./v2/templates"
-	if templateType != "" {
-		url += "?type=" + templateType
+	if typ != "" {
+		url += "?type=" + typ
 	}
 
 	var templates Templates
@@ -94,11 +94,10 @@ func (c Client) Templates(templateType string) (Templates, error) {
 	return templates, err
 }
 
-func (c Client) TemplatePreview(templateID string, personalisation ...PersonalisationOption) (TemplatePreview, error) {
-
+func (c Client) TemplatePreview(id string, personalisation ...PersonalisationOption) (TemplatePreview, error) {
 	var response TemplatePreview
 	var buf bytes.Buffer
-	var payload = payload{}
+	var payload payload
 
 	for _, p := range personalisation {
 		payload = p.updatePersonalisationPayload(payload)
@@ -109,20 +108,20 @@ func (c Client) TemplatePreview(templateID string, personalisation ...Personalis
 		return response, err
 	}
 
-	url := "/v2/template/" + templateID + "/preview"
+	url := "/v2/template/" + id + "/preview"
 	err = c.c.Post(url, &buf).JSON(&response).Error
 	return response, err
 }
 
 func (c Client) SendEmail(
-	templateID string,
+	id string,
 	emailAddress string,
 	options ...SendEmailOption,
 ) (SentEmail, error) {
 	var response SentEmail
 	var buf bytes.Buffer
 	var p = payload{
-		{"template_id", templateID},
+		{"template_id", id},
 		{"email_address", emailAddress},
 	}
 
@@ -140,14 +139,14 @@ func (c Client) SendEmail(
 }
 
 func (c Client) SendSMS(
-	templateID string,
+	id string,
 	phoneNumber string,
 	options ...SendSMSOption,
 ) (SentSMS, error) {
 	var response SentSMS
 	var buf bytes.Buffer
 	var p = payload{
-		{"template_id", templateID},
+		{"template_id", id},
 		{"phone_number", phoneNumber},
 	}
 
