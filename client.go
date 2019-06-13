@@ -70,20 +70,20 @@ func NewClient(apiKey string, options ...ClientOption) (*Client, error) {
 	return &Client{client}, nil
 }
 
-func (c Client) TemplateByID(id string) (Template, error) {
+func (c Client) GetTemplateByID(id string) (Template, error) {
 	var template Template
 	err := c.c.Get("./v2/template/" + id).JSON(&template).Error
 	return template, err
 }
 
-func (c Client) TemplateVersion(id string, version int) (Template, error) {
+func (c Client) GetTemplateByIDAndVersion(id string, version int) (Template, error) {
 	url := "/v2/template/" + id + "/version/" + strconv.Itoa(version)
 	var template Template
 	err := c.c.Get(url).JSON(&template).Error
 	return template, err
 }
 
-func (c Client) Templates(typ string) (Templates, error) {
+func (c Client) GetAllTemplates(typ string) (Templates, error) {
 	url := "./v2/templates"
 	if typ != "" {
 		url += "?type=" + typ
@@ -94,7 +94,7 @@ func (c Client) Templates(typ string) (Templates, error) {
 	return templates, err
 }
 
-func (c Client) TemplatePreview(id string, personalisation ...PersonalisationOption) (TemplatePreview, error) {
+func (c Client) GenerateTemplatePreview(id string, personalisation ...PersonalisationOption) (TemplatePreview, error) {
 	var response TemplatePreview
 	var buf bytes.Buffer
 	var payload payload

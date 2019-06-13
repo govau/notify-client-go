@@ -98,7 +98,7 @@ func TestSendEmail(t *testing.T) {
 
 func TestGetAllTemplates(t *testing.T) {
 	client, smsTemplateId, emailTemplateId := setup(t)
-	resp, err := client.Templates("")
+	resp, err := client.GetAllTemplates("")
 	if err != nil {
 		t.Fatalf("Error fetching all templates: %v", err)
 	}
@@ -108,7 +108,7 @@ func TestGetAllTemplates(t *testing.T) {
 
 func TestGetSMSTemplates(t *testing.T) {
 	client, smsTemplateId, _ := setup(t)
-	resp, err := client.Templates("sms")
+	resp, err := client.GetAllTemplates("sms")
 	if err != nil {
 		t.Fatalf("Error fetching sms templates: %v", err)
 	}
@@ -118,7 +118,7 @@ func TestGetSMSTemplates(t *testing.T) {
 
 func TestGetEmailTemplates(t *testing.T) {
 	client, _, emailTemplateId := setup(t)
-	resp, err := client.Templates("email")
+	resp, err := client.GetAllTemplates("email")
 	if err != nil {
 		t.Fatalf("Error fetching email templates: %v", err)
 	}
@@ -128,7 +128,7 @@ func TestGetEmailTemplates(t *testing.T) {
 
 func TestGetTemplateById(t *testing.T) {
 	client, smsTemplateId, _ := setup(t)
-	resp, err := client.TemplateByID(smsTemplateId)
+	resp, err := client.GetTemplateByID(smsTemplateId)
 	if err != nil {
 		t.Fatalf("Error fetching template by id: %v", err)
 	}
@@ -136,9 +136,9 @@ func TestGetTemplateById(t *testing.T) {
 	assertEqual(t, "sms", resp.Type)
 }
 
-func TestGetTemplateVersion(t *testing.T) {
+func TestGetTemplateByIdAndVersion(t *testing.T) {
 	client, _, emailTemplateId := setup(t)
-	resp, err := client.TemplateVersion(emailTemplateId, 1)
+	resp, err := client.GetTemplateByIDAndVersion(emailTemplateId, 1)
 	if err != nil {
 		t.Fatalf("Error fetching template version: %v", err)
 	}
@@ -149,9 +149,9 @@ func TestGetTemplateVersion(t *testing.T) {
 	assertEqual(t, "Hi ((name)),\r\n\r\nMy favourite colour is ((colour)).", resp.Body)
 }
 
-func TestTemplatePreview(t *testing.T) {
+func TestGenerateTemplatePreview(t *testing.T) {
 	client, _, emailTemplateId := setup(t)
-	resp, err := client.TemplatePreview(emailTemplateId, notify.Personalisation{
+	resp, err := client.GenerateTemplatePreview(emailTemplateId, notify.Personalisation{
 		{"name", "KD"},
 		{"colour", "yellow"},
 	})
