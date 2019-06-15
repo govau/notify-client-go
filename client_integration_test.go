@@ -53,7 +53,6 @@ func TestSendSMS(t *testing.T) {
 	if err != nil {
 		t.Errorf("could not send SMS: %v", err)
 	}
-
 	if resp.ID == "" {
 		t.Errorf("Response ID should not be empty")
 	}
@@ -90,7 +89,6 @@ func TestSendEmail(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error sending email: %v", err)
 	}
-
 	if resp.ID == "" {
 		t.Errorf("Response ID should not be empty")
 	}
@@ -183,7 +181,6 @@ func TestGenerateTemplatePreview(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error fetching email templates: %v", err)
 	}
-
 	wantedBody := "Hi KD,\n\nMy favourite colour is yellow.\n"
 	if resp.Body != wantedBody {
 		t.Errorf("Got %v, want %v", resp.Body, wantedBody)
@@ -193,12 +190,6 @@ func TestGenerateTemplatePreview(t *testing.T) {
 		t.Errorf("Got %v, want %v", resp.Type, wantedType)
 	}
 }
-
-// func assertEqual(t *testing.T, got, want interface{}) {
-// 	if got != want {
-// 		t.Errorf("Got %v, want %v", got, want)
-// 	}
-// }
 
 func assertTemplateFound(t *testing.T, templates notify.Templates, templateIDs []string) {
 	for _, id := range templateIDs {
