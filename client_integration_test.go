@@ -60,11 +60,11 @@ func TestSendSMS(t *testing.T) {
 		t.Errorf("Response URI should not be empty")
 	}
 	if *resp.Reference != ref {
-		t.Errorf("Got %v, want %v", *resp.Reference, ref)
+		t.Errorf("got %v, want %v", *resp.Reference, ref)
 	}
 	wantedBody := "Hello John,\n\nToday is Friday."
 	if resp.Content.Body != wantedBody {
-		t.Errorf("Got %v, want %v", resp.Content.Body, wantedBody)
+		t.Errorf("got %v, want %v", resp.Content.Body, wantedBody)
 	}
 }
 
@@ -97,7 +97,7 @@ func TestSendEmail(t *testing.T) {
 	}
 	wantedBody := "Hi John,\n\nMy favourite colour is pink.\n"
 	if resp.Content.Body != wantedBody {
-		t.Errorf("Got %v, want %v", resp.Content.Body, wantedBody)
+		t.Errorf("got %v, want %v", resp.Content.Body, wantedBody)
 	}
 }
 
@@ -139,11 +139,11 @@ func TestGetTemplateByID(t *testing.T) {
 	}
 	wantedName := "go-sdk-test-sms"
 	if resp.Name != wantedName {
-		t.Errorf("Got %v, want %v", resp.Name, wantedName)
+		t.Errorf("got %v, want %v", resp.Name, wantedName)
 	}
 	wantedType := "sms"
 	if resp.Type != wantedType {
-		t.Errorf("Got %v, want %v", resp.Type, wantedType)
+		t.Errorf("got %v, want %v", resp.Type, wantedType)
 	}
 }
 
@@ -156,19 +156,19 @@ func TestGetTemplateByIDAndVersion(t *testing.T) {
 
 	wantedName := "go-sdk-test-email"
 	if resp.Name != wantedName {
-		t.Errorf("Got %v, want %v", resp.Name, wantedName)
+		t.Errorf("got %v, want %v", resp.Name, wantedName)
 	}
 	wantedType := "email"
 	if resp.Type != wantedType {
-		t.Errorf("Got %v, want %v", resp.Type, wantedType)
+		t.Errorf("got %v, want %v", resp.Type, wantedType)
 	}
 	wantedVersion := 1
 	if resp.Version != wantedVersion {
-		t.Errorf("Got %v, want %v", resp.Version, wantedVersion)
+		t.Errorf("got %v, want %v", resp.Version, wantedVersion)
 	}
 	wantedBody := "Hi ((name)),\r\n\r\nMy favourite colour is ((colour))."
 	if resp.Body != wantedBody {
-		t.Errorf("Got %v, want %v", resp.Body, wantedBody)
+		t.Errorf("got %v, want %v", resp.Body, wantedBody)
 	}
 }
 
@@ -183,11 +183,11 @@ func TestGenerateTemplatePreview(t *testing.T) {
 	}
 	wantedBody := "Hi KD,\n\nMy favourite colour is yellow.\n"
 	if resp.Body != wantedBody {
-		t.Errorf("Got %v, want %v", resp.Body, wantedBody)
+		t.Errorf("got %v, want %v", resp.Body, wantedBody)
 	}
 	wantedType := "email"
 	if resp.Type != wantedType {
-		t.Errorf("Got %v, want %v", resp.Type, wantedType)
+		t.Errorf("got %v, want %v", resp.Type, wantedType)
 	}
 }
 
