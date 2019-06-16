@@ -10,17 +10,17 @@ import (
 func setup(t *testing.T) (client *notify.Client, smsTemplateID string, emailTemplateID string) {
 	apiKey := os.Getenv("API_KEY")
 	if apiKey == "" {
-		t.Fatal("could not set API_KEY environment variable")
+		t.Fatal("API_KEY environment variable must be set")
 	}
 
 	smsTemplateID = os.Getenv("SMS_TEMPLATE_ID")
 	if smsTemplateID == "" {
-		t.Fatal("could not set SMS_TEMPLATE_ID environment variable")
+		t.Fatal("SMS_TEMPLATE_ID environment variable must be set")
 	}
 
 	emailTemplateID = os.Getenv("EMAIL_TEMPLATE_ID")
 	if emailTemplateID == "" {
-		t.Fatal("could not set EMAIL_TEMPLATE_ID environment variable")
+		t.Fatal("EMAIL_TEMPLATE_ID environment variable must be set")
 	}
 
 	var err error
@@ -51,7 +51,7 @@ func TestSendSMS(t *testing.T) {
 		notify.Reference(ref),
 	)
 	if err != nil {
-		t.Errorf("could not send SMS: %v", err)
+		t.Fatalf("could not send SMS: %v", err)
 	}
 	if resp.ID == "" {
 		t.Errorf("Response ID should not be empty")
@@ -87,7 +87,7 @@ func TestSendEmail(t *testing.T) {
 		notify.Reference(ref),
 	)
 	if err != nil {
-		t.Errorf("Error sending email: %v", err)
+		t.Fatalf("Error sending email: %v", err)
 	}
 	if resp.ID == "" {
 		t.Errorf("Response ID should not be empty")
@@ -105,7 +105,7 @@ func TestGetAllTemplates(t *testing.T) {
 	client, smsTemplateID, emailTemplateID := setup(t)
 	resp, err := client.GetAllTemplates("")
 	if err != nil {
-		t.Errorf("Error fetching all templates: %v", err)
+		t.Fatalf("Error fetching all templates: %v", err)
 	}
 
 	assertTemplateFound(t, resp, []string{emailTemplateID, smsTemplateID})
