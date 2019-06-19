@@ -37,7 +37,7 @@ func TestSendSMS(t *testing.T) {
 	client, smsTemplateID, _ := setup(t)
 	phoneNumber := os.Getenv("SMS_RECIPIENT_NUMBER")
 	if phoneNumber == "" {
-		t.Fatal("could not set SMS_RECIPIENT_NUMBER environment variable")
+		t.Fatal("SMS_RECIPIENT_NUMBER environment variable must be set")
 	}
 
 	ref := "TestSendSMS"
@@ -87,7 +87,7 @@ func TestSendEmail(t *testing.T) {
 		notify.Reference(ref),
 	)
 	if err != nil {
-		t.Fatalf("Error sending email: %v", err)
+		t.Fatalf("could not send email: %v", err)
 	}
 	if resp.ID == "" {
 		t.Errorf("Response ID should not be empty")
@@ -105,7 +105,7 @@ func TestGetAllTemplates(t *testing.T) {
 	client, smsTemplateID, emailTemplateID := setup(t)
 	resp, err := client.GetAllTemplates("")
 	if err != nil {
-		t.Fatalf("Error fetching all templates: %v", err)
+		t.Fatalf("could not fetch all templates: %v", err)
 	}
 
 	assertTemplateFound(t, resp, []string{emailTemplateID, smsTemplateID})
@@ -115,7 +115,7 @@ func TestGetSMSTemplates(t *testing.T) {
 	client, smsTemplateID, _ := setup(t)
 	resp, err := client.GetAllTemplates("sms")
 	if err != nil {
-		t.Fatalf("Error fetching sms templates: %v", err)
+		t.Fatalf("could not fetch sms templates: %v", err)
 	}
 
 	assertTemplateFound(t, resp, []string{smsTemplateID})
@@ -125,7 +125,7 @@ func TestGetEmailTemplates(t *testing.T) {
 	client, _, emailTemplateID := setup(t)
 	resp, err := client.GetAllTemplates("email")
 	if err != nil {
-		t.Fatalf("Error fetching email templates: %v", err)
+		t.Fatalf("could not fetch email templates: %v", err)
 	}
 
 	assertTemplateFound(t, resp, []string{emailTemplateID})
@@ -135,7 +135,7 @@ func TestGetTemplateByID(t *testing.T) {
 	client, smsTemplateID, _ := setup(t)
 	resp, err := client.GetTemplateByID(smsTemplateID)
 	if err != nil {
-		t.Fatalf("Error fetching template by id: %v", err)
+		t.Fatalf("could not fetch template by id: %v", err)
 	}
 	wantedName := "go-sdk-test-sms"
 	if resp.Name != wantedName {
@@ -151,7 +151,7 @@ func TestGetTemplateByIDAndVersion(t *testing.T) {
 	client, _, emailTemplateID := setup(t)
 	resp, err := client.GetTemplateByIDAndVersion(emailTemplateID, 1)
 	if err != nil {
-		t.Fatalf("Error fetching template version: %v", err)
+		t.Fatalf("could not fetch template version: %v", err)
 	}
 
 	wantedName := "go-sdk-test-email"
@@ -179,7 +179,7 @@ func TestGenerateTemplatePreview(t *testing.T) {
 		{"colour", "yellow"},
 	})
 	if err != nil {
-		t.Fatalf("Error fetching email templates: %v", err)
+		t.Fatalf("could not fetch email templates: %v", err)
 	}
 	wantedBody := "Hi KD,\n\nMy favourite colour is yellow.\n"
 	if resp.Body != wantedBody {
@@ -200,7 +200,7 @@ func assertTemplateFound(t *testing.T, templates notify.Templates, templateIDs [
 			}
 		}
 		if !found {
-			t.Errorf("Template id not found: %s", id)
+			t.Errorf("could not find template id: %s", id)
 		}
 	}
 }
