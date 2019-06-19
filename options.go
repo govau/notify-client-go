@@ -44,14 +44,16 @@ func (personalisation Personalisation) updateEmailPayload(p payload) payload {
 	return personalisation.updatePayload(p)
 }
 
+func (personalisation Personalisation) updatePersonalisationPayload(p payload) payload {
+	return personalisation.updatePayload(p)
+}
+
 // Reference is a unique identifier you create. It identifies a single unique
 // notification or a batch of notifications.
 func Reference(referenceID string) CommonOption {
-	return CommonOption{
-		updatePayloadFunc(func(p payload) payload {
-			return append(p, payloadItem{"reference", referenceID})
-		}),
-	}
+	return updatePayloadFunc(func(p payload) payload {
+		return append(p, payloadItem{"reference", referenceID})
+	})
 }
 
 // EmailReplyToID is the ID of the reply-to address to receive replies from
@@ -69,12 +71,9 @@ func SMSSenderID(senderID string) SendSMSOption {
 	})
 }
 
-type payloadUpdater interface {
-	updatePayload(payload) payload
-}
-
-type CommonOption struct {
-	payloadUpdater
+type CommonOption interface {
+	SendSMSOption
+	SendEmailOption
 }
 
 type SendSMSOption interface {
@@ -85,19 +84,11 @@ type SendEmailOption interface {
 	updateEmailPayload(payload) payload
 }
 
-func (co CommonOption) updateSMSPayload(p payload) payload {
-	return co.updatePayload(p)
-}
-
-func (co CommonOption) updateEmailPayload(p payload) payload {
-	return co.updatePayload(p)
+type PersonalisationOption interface {
+	updatePersonalisationPayload(payload) payload
 }
 
 type updatePayloadFunc func(payload) payload
-
-func (fn updatePayloadFunc) updatePayload(p payload) payload {
-	return fn(p)
-}
 
 func (fn updatePayloadFunc) updateSMSPayload(p payload) payload {
 	return fn(p)

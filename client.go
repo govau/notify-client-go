@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"strconv"
 
 	"github.com/govau/notify-client-go/internal/base"
 )
@@ -69,21 +70,58 @@ func NewClient(apiKey string, options ...ClientOption) (*Client, error) {
 	return &Client{client}, nil
 }
 
-func (c Client) Templates() (Templates, error) {
+func (c Client) GetTemplateByID(id string) (Template, error) {
+	var template Template
+	err := c.c.Get("./v2/template/" + id).JSON(&template).Error
+	return template, err
+}
+
+func (c Client) GetTemplateByIDAndVersion(id string, version int) (Template, error) {
+	url := "/v2/template/" + id + "/version/" + strconv.Itoa(version)
+	var template Template
+	err := c.c.Get(url).JSON(&template).Error
+	return template, err
+}
+
+func (c Client) GetAllTemplates(typ string) (Templates, error) {
+	url := "./v2/templates"
+	if typ != "" {
+		url += "?type=" + typ
+	}
+
 	var templates Templates
-	err := c.c.Get("./v2/templates").JSON(&templates, "templates").Error
+	err := c.c.Get(url).JSON(&templates, "templates").Error
 	return templates, err
 }
 
+func (c Client) GenerateTemplatePreview(id string, personalisation ...PersonalisationOption) (TemplatePreview, error) {
+	var response TemplatePreview
+	var buf bytes.Buffer
+	var payload payload
+
+	for _, p := range personalisation {
+		payload = p.updatePersonalisationPayload(payload)
+	}
+
+	err := json.NewEncoder(&buf).Encode(payload)
+	if err != nil {
+		return response, err
+	}
+
+	url := "/v2/template/" + id + "/preview"
+	err = c.c.Post(url, &buf).JSON(&response).Error
+	return response, err
+}
+
 func (c Client) SendEmail(
-	templateID string,
+	id string,
 	emailAddress string,
 	options ...SendEmailOption,
 ) (SentEmail, error) {
 	var response SentEmail
 	var buf bytes.Buffer
 	var p = payload{
-		{"template_id", templateID},
+		{"template_id", id},
 		{"email_address", emailAddress},
 	}
 
@@ -101,14 +139,14 @@ func (c Client) SendEmail(
 }
 
 func (c Client) SendSMS(
-	templateID string,
+	id string,
 	phoneNumber string,
 	options ...SendSMSOption,
 ) (SentSMS, error) {
 	var response SentSMS
 	var buf bytes.Buffer
 	var p = payload{
-		{"template_id", templateID},
+		{"template_id", id},
 		{"phone_number", phoneNumber},
 	}
 
@@ -174,4 +212,12 @@ type SentEmail struct {
 		URI     string `json:"uri"`
 		Version int    `json:"version"`
 	} `json:"template"`
+}
+
+type TemplatePreview struct {
+	ID      string `json:"id,omitempty"`
+	Type    string `json:"type"`
+	Version int    `json:"version"`
+	Subject string `json:"subject,omitempty"`
+	Body    string `json:"body"`
 }
