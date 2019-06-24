@@ -82,7 +82,7 @@ func TestSendEmail(t *testing.T) {
 		emailAddress,
 		notify.Personalisation{
 			{"name", "Kim"},
-			{"colour", "pink"},
+			{"colours", []string{"pink", "blue"}},
 		},
 		notify.Reference(ref),
 	)
@@ -95,7 +95,7 @@ func TestSendEmail(t *testing.T) {
 	if resp.URI == "" {
 		t.Errorf("Response URI should not be empty")
 	}
-	wantedBody := "Hi Kim,\n\nMy favourite colour is pink.\n"
+	wantedBody := "Hi Kim,\n\nMy favourite colours are:\n\n• pink\n• blue\n"
 	if resp.Content.Body != wantedBody {
 		t.Errorf("got %v, want %v", resp.Content.Body, wantedBody)
 	}
@@ -176,12 +176,12 @@ func TestGenerateTemplatePreview(t *testing.T) {
 	client, _, emailTemplateID := setup(t)
 	resp, err := client.GenerateTemplatePreview(emailTemplateID, notify.Personalisation{
 		{"name", "KD"},
-		{"colour", "yellow"},
+		{"colours", []string{"yellow", "blue"}},
 	})
 	if err != nil {
 		t.Fatalf("could not fetch email templates: %v", err)
 	}
-	wantedBody := "Hi KD,\n\nMy favourite colour is yellow.\n"
+	wantedBody := "Hi KD,\n\nMy favourite colours are:\n\n• yellow\n• blue\n"
 	if resp.Body != wantedBody {
 		t.Errorf("got %v, want %v", resp.Body, wantedBody)
 	}
