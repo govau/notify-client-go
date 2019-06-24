@@ -45,7 +45,7 @@ func TestSendSMS(t *testing.T) {
 		smsTemplateID,
 		phoneNumber,
 		notify.Personalisation{
-			{"name", "John"},
+			{"name", "Kim"},
 			{"day", "Friday"},
 		},
 		notify.Reference(ref),
@@ -62,7 +62,7 @@ func TestSendSMS(t *testing.T) {
 	if *resp.Reference != ref {
 		t.Errorf("got %v, want %v", *resp.Reference, ref)
 	}
-	wantedBody := "Hello John,\n\nToday is Friday."
+	wantedBody := "Hello Kim,\n\nToday is Friday."
 	if resp.Content.Body != wantedBody {
 		t.Errorf("got %v, want %v", resp.Content.Body, wantedBody)
 	}
@@ -81,7 +81,7 @@ func TestSendEmail(t *testing.T) {
 		emailTemplateID,
 		emailAddress,
 		notify.Personalisation{
-			{"name", "John"},
+			{"name", "Kim"},
 			{"colour", "pink"},
 		},
 		notify.Reference(ref),
@@ -95,7 +95,7 @@ func TestSendEmail(t *testing.T) {
 	if resp.URI == "" {
 		t.Errorf("Response URI should not be empty")
 	}
-	wantedBody := "Hi John,\n\nMy favourite colour is pink.\n"
+	wantedBody := "Hi Kim,\n\nMy favourite colour is pink.\n"
 	if resp.Content.Body != wantedBody {
 		t.Errorf("got %v, want %v", resp.Content.Body, wantedBody)
 	}
