@@ -24,10 +24,13 @@ func (p payload) MarshalJSON() ([]byte, error) {
 // The struct should be structured such that they key is the name of the value
 // in your template, and the value is what you expect to be substituted in the
 // message.
-type Personalisation []struct{ Key, Value string }
+type Personalisation []struct {
+	Key   string
+	Value interface{}
+}
 
 func (personalisation Personalisation) updatePayload(p payload) payload {
-	dict := map[string]string{}
+	dict := map[string]interface{}{}
 
 	for _, item := range personalisation {
 		dict[item.Key] = item.Value
