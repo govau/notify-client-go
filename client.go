@@ -94,6 +94,14 @@ func (c Client) GetAllTemplates(typ string) (Templates, error) {
 	return templates, err
 }
 
+func (c Client) GetNotificationById(id string) (Notification, error) {
+	url := "./v2/notifications/" + id
+
+	var notification Notification
+	err := c.c.Get(url).JSON(&notification).Error
+	return notification, err
+}
+
 func (c Client) GenerateTemplatePreview(id string, personalisation ...PersonalisationOption) (TemplatePreview, error) {
 	var response TemplatePreview
 	var buf bytes.Buffer
@@ -220,4 +228,23 @@ type TemplatePreview struct {
 	Version int    `json:"version"`
 	Subject string `json:"subject,omitempty"`
 	Body    string `json:"body"`
+}
+
+type Notification struct {
+	ID           string `json:"id,omitempty"`
+	Subject      string `json:"subject"`
+	Body         string `json:"body"`
+	Reference    string `json:"reference"`
+	EmailAddress string `json:"email_address"`
+	PhoneNumber  string `json:"phone_number"`
+	Type         string `json:"type"`
+	Status       string `json:"status"`
+	CreatedBy    string `json:"created_by_name"`
+	CreatedAt    string `json:"created_at"`
+	SentAt       string `json:"sent_at"`
+	Template     struct {
+		ID      string `json:"id"`
+		URI     string `json:"uri"`
+		Version int    `json:"version"`
+	} `json:"template"`
 }
