@@ -21,7 +21,7 @@ func (p payload) MarshalJSON() ([]byte, error) {
 
 // Personalisation is a slice of structs used to define placeholder values in a
 // template, such as name or reference number.
-// The struct should be structured such that they key is the name of the value
+// The struct should be structured such that the key is the name of the value
 // in your template, and the value is what you expect to be substituted in the
 // message.
 type Personalisation []struct {
