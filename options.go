@@ -67,8 +67,8 @@ func StatusCallback(url, bearerToken string) CommonOption {
 	})
 }
 
-// EmailReplyToID is the ID of the reply-to address to receive replies from
-// users.
+// EmailReplyToID is the ID of the reply-to email address to receive replies
+// from users.
 func EmailReplyToID(address string) SendEmailOption {
 	return updatePayloadFunc(func(p payload) payload {
 		return append(p, payloadItem{"email_reply_to_id", address})
