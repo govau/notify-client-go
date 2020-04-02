@@ -85,6 +85,7 @@ func TestNewClientAndSend(t *testing.T) {
 			{"user_name", "Sam"},
 			{"amount_owing", "$205.20"},
 		},
+		notify.StatusCallback("https://localhost/callback", "1234567890"),
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -99,6 +100,10 @@ func TestNewClientAndSend(t *testing.T) {
 		"template_id",
 		"your-local-identifier",
 		"Sam",
+		"status_callback_url",
+		"status_callback_bearer_token",
+		"https://localhost/callback",
+		"1234567890",
 	} {
 		if !strings.Contains(request, term) {
 			t.Errorf("request did not contain %s", term)
