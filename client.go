@@ -102,6 +102,25 @@ func (c Client) GetNotificationById(id string) (Notification, error) {
 	return notification, err
 }
 
+func (c Client) GetAllNotifications(typ, olderThanID string) (Notifications, error) {
+	u, err := url.Parse("./v2/notifications")
+	if err != nil {
+		return Notifications{}, err
+	}
+	q := url.Values{}
+	if typ != "" {
+		q.Set("template_type", typ)
+	}
+	if olderThanID != "" {
+		q.Set("older_than", olderThanID)
+	}
+	u.RawQuery = q.Encode()
+
+	var notifications Notifications
+	err = c.c.Get(u.String()).JSON(&notifications, "notifications").Error
+	return notifications, err
+}
+
 func (c Client) GenerateTemplatePreview(id string, personalisation ...PersonalisationOption) (TemplatePreview, error) {
 	var response TemplatePreview
 	var buf bytes.Buffer
@@ -248,3 +267,5 @@ type Notification struct {
 		Version int    `json:"version"`
 	} `json:"template"`
 }
+
+type Notifications []Notification
