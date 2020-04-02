@@ -59,6 +59,14 @@ func Reference(referenceID string) CommonOption {
 	})
 }
 
+// StatusCallback allows you to pass delivery status callback details at the
+// time of sending a notification.
+func StatusCallback(url, bearerToken string) CommonOption {
+	return updatePayloadFunc(func(p payload) payload {
+		return append(p, payloadItem{"status_callback_url", url}, payloadItem{"status_callback_bearer_token", bearerToken})
+	})
+}
+
 // EmailReplyToID is the ID of the reply-to address to receive replies from
 // users.
 func EmailReplyToID(address string) SendEmailOption {
