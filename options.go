@@ -1,6 +1,9 @@
 package notify
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"time"
+)
 
 type payloadItem struct {
 	field   string
@@ -56,6 +59,14 @@ func (personalisation Personalisation) updatePersonalisationPayload(p payload) p
 func Reference(referenceID string) CommonOption {
 	return updatePayloadFunc(func(p payload) payload {
 		return append(p, payloadItem{"reference", referenceID})
+	})
+}
+
+// ScheduleFor allows you to schedule a notification for a certain time within
+// the next day.
+func ScheduleFor(t time.Time) CommonOption {
+	return updatePayloadFunc(func(p payload) payload {
+		return append(p, payloadItem{"scheduled_for", t.Format(time.RFC3339)})
 	})
 }
 
