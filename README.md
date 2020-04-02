@@ -1,4 +1,9 @@
-# Notify Go client &middot; [![CircleCI](https://circleci.com/gh/govau/notify-client-go.svg?style=svg)](https://circleci.com/gh/govau/notify-client-go) [![GoDoc](https://godoc.org/github.com/govau/notify-client-go?status.svg)](http://godoc.org/github.com/govau/notify-client-go) [![Report card](https://goreportcard.com/badge/github.com/govau/notify-client-go)](https://goreportcard.com/report/github.com/govau/notify-client-go)
+# Notify Go client
+
+[![GoDoc](https://godoc.org/github.com/govau/notify-client-go?status.svg)](http://godoc.org/github.com/govau/notify-client-go)
+[![Build status](https://circleci.com/gh/govau/notify-client-go.svg?style=svg)](https://circleci.com/gh/govau/notify-client-go)
+[![Report card](https://goreportcard.com/badge/github.com/govau/notify-client-go)](https://goreportcard.com/report/github.com/govau/notify-client-go)
+[![Sourcegraph](https://sourcegraph.com/github.com/govau/notify-client-go/-/badge.svg)](https://sourcegraph.com/github.com/govau/notify-client-go?badge)
 
 This documentation is for developers interested in using a Go client to integrate with Notify.
 
